@@ -310,24 +310,15 @@ export default function CheckoutSuccessContent() {
                   Payment Options
                 </CardTitle>
                 <CardDescription>
-                  Complete your payment using one of the methods below
+                  Complete your payment using our MOMO code
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Pay on Phone */}
-                <a
-                  href={`tel:*182*1*1*0796711896*${Math.round(order.total)}#`}
-                  className="block"
-                >
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
-                    <Phone className="h-4 w-4 mr-2" />
-                    Pay on Phone
-                  </Button>
-                </a>
+                
 
                 {/* Pay on Code */}
                 <a
-                  href={`tel:*182*8*1*016482*${Math.round(order.total)}#`}
+                  href={`tel:*182*8*1*011896*${Math.round(order.total)}#`}
                   className="block"
                 >
                   <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
@@ -356,7 +347,7 @@ export default function CheckoutSuccessContent() {
             {/* Help */}
             <div className="text-center text-sm text-muted-foreground">
               <p>Need help? Call us at</p>
-              <p className="font-medium text-foreground">+1 234 567 8900</p>
+              <p className="font-medium text-foreground">+250 796711896</p>
             </div>
           </div>
         </div>
