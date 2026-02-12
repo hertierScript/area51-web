@@ -304,7 +304,40 @@ export default function CheckoutSuccessContent() {
 
             {/* Actions */}
             <Card className="border-primary/20 bg-card/50">
-              <CardContent className="pt-6 space-y-3">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Phone className="h-5 w-5 text-primary" />
+                  Payment Options
+                </CardTitle>
+                <CardDescription>
+                  Complete your payment using one of the methods below
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Pay on Phone */}
+                <a
+                  href={`tel:*182*1*1*0796711896*${Math.round(order.total)}#`}
+                  className="block"
+                >
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+                    <Phone className="h-4 w-4 mr-2" />
+                    Pay on Phone
+                  </Button>
+                </a>
+
+                {/* Pay on Code */}
+                <a
+                  href={`tel:*182*8*1*016482*${Math.round(order.total)}#`}
+                  className="block"
+                >
+                  <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+                    <Phone className="h-4 w-4 mr-2" />
+                    Pay on Code
+                  </Button>
+                </a>
+
+                <Separator className="my-4" />
+
                 <Link href="/menu" className="block">
                   <Button className="w-full bg-primary text-primary-foreground">
                     <ShoppingBag className="h-4 w-4 mr-2" />
