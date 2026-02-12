@@ -167,7 +167,7 @@ export default function Home() {
             categoriesCount: data.categories?.length || 0,
             menuItemsCount: data.menuItems?.length || 0,
           });
-          
+
           const cartItems: CartMenuItem[] = data.menuItems
             .slice(0, 8)
             .map((item: any) => ({
@@ -221,7 +221,7 @@ export default function Home() {
         <Hero />
 
         {/* Featured Menu Section */}
-        <section className="py-16 bg-background">
+        <section id="featured-dishes" className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-8">
               <div>
