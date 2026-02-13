@@ -33,6 +33,7 @@ import {
   Clock,
   Shield,
   Loader2,
+  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -430,15 +431,15 @@ export default function CheckoutPage() {
                         <CreditCard className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">Cash on Delivery</p>
+                        <p className="font-medium">Mobile Payment</p>
                         <p className="text-sm text-muted-foreground">
-                          Pay when you receive your order
+                          Complete payment after placing your order.
                         </p>
                       </div>
                     </div>
                     <Check className="h-5 w-5 text-primary" />
                   </div>
-                  <div className="flex items-center justify-between p-4 border border-border rounded-lg cursor-not-allowed opacity-50">
+                  {/* <div className="flex items-center justify-between p-4 border border-border rounded-lg cursor-not-allowed opacity-50">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                         <CreditCard className="h-5 w-5 text-muted-foreground" />
@@ -450,7 +451,7 @@ export default function CheckoutPage() {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </CardContent>
             </Card>
@@ -458,6 +459,40 @@ export default function CheckoutPage() {
 
           {/* Right Column - Order Summary */}
           <div className="space-y-6">
+            {/* Contact Information Card */}
+            {(formData.name || formData.phone) && (
+              <Card className="border-primary/20 bg-card/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <UserCheck className="h-5 w-5 text-primary" />
+                    Contact Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {formData.name && (
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <User className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{formData.name}</p>
+                      </div>
+                    </div>
+                  )}
+                  {formData.phone && (
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Phone className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{formData.phone}</p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Order Summary */}
             <Card className="border-primary/20 bg-card/50 sticky top-4">
               <CardHeader>
@@ -637,3 +672,4 @@ export default function CheckoutPage() {
     </div>
   );
 }
+

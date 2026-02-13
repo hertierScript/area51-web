@@ -137,12 +137,13 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-10 flex items-center justify-center gap-x-6"
           >
-            <button
+            <Button
               onClick={scrollToFeaturedDishes}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 text-lg px-8 py-6 rounded-full font-bold shadow-[0_0_20px_rgba(0,255,0,0.3)] cursor-pointer"
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 text-lg px-8 py-6 rounded-full font-bold shadow-[0_0_20px_rgba(0,255,0,0.3)]"
             >
               Order Now
-            </button>
+            </Button>
             <Link href="/menu">
               <Button
                 variant="outline"

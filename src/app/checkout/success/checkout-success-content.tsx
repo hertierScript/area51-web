@@ -35,6 +35,9 @@ type Order = {
   delivery_address: string;
   notes: string;
   created_at: string;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_address: string | null;
   customer?: {
     name: string;
     phone: string;
@@ -125,6 +128,12 @@ export default function CheckoutSuccessContent() {
       </div>
     );
   }
+
+  // Get customer info from orders table first, then fall back to customers table
+  const customerName =
+    order.customer_name || order.customer?.name || "Customer";
+  const customerPhone = order.customer_phone || order.customer?.phone;
+  const customerEmail = order.customer?.email;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -261,24 +270,30 @@ export default function CheckoutSuccessContent() {
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                     <span className="font-medium text-primary">
-                      {order.customer?.name?.charAt(0).toUpperCase() || "C"}
+                      {customerName.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium">{order.customer?.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {order.customer?.email}
-                    </p>
+                    <p className="font-medium">{customerName}</p>
+                    {customerEmail && (
+                      <p className="text-sm text-muted-foreground">
+                        {customerEmail}
+                      </p>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="text-sm">{order.customer?.phone}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <span className="text-sm">{order.customer?.email}</span>
-                </div>
+                {customerPhone && (
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="text-sm">{customerPhone}</span>
+                  </div>
+                )}
+                {customerEmail && (
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span className="text-sm">{customerEmail}</span>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

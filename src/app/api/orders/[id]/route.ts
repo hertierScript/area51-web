@@ -33,6 +33,9 @@ export async function GET(
         delivery_address,
         notes,
         created_at,
+        customer_name,
+        customer_phone,
+        customer_address,
         customer:customers(name, phone, email),
         order_items(
           id,

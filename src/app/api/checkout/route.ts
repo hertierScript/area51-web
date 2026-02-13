@@ -17,10 +17,10 @@ export async function POST(request: Request) {
       finalTotal,
     } = body;
 
-    // Validate required fields
-    if (!name || !email || !phone || !address || !city) {
+    // Validate required fields (email is optional)
+    if (!name || !phone || !address || !city) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Please fill in all required fields" },
         { status: 400 },
       );
     }
@@ -39,42 +39,64 @@ export async function POST(request: Request) {
       },
     );
 
-    // Get or create customer
-    let customerId: string;
-    const { data: existingCustomer } = await supabase
-      .from("customers")
-      .select("id")
-      .eq("email", email)
-      .single();
+    // Get or create customer only if email is provided
+    let customerId: string | null = null;
 
-    if (existingCustomer) {
-      customerId = existingCustomer.id;
-      await supabase
+    if (email) {
+      // Try to find existing customer by email
+      const { data: existingCustomer } = await supabase
         .from("customers")
-        .update({ name, phone, address })
-        .eq("id", customerId);
-    } else {
-      const { data: newCustomer, error: customerError } = await supabase
-        .from("customers")
-        .insert({ email, name, phone, address })
         .select("id")
+        .eq("email", email)
         .single();
 
-      if (customerError) {
-        console.error("Error creating customer:", customerError);
-        return NextResponse.json(
-          { error: "Failed to create customer" },
-          { status: 500 },
-        );
+      if (existingCustomer) {
+        customerId = existingCustomer.id;
+        await supabase
+          .from("customers")
+          .update({ name, phone, address })
+          .eq("id", customerId);
+      } else {
+        // Create new customer with email
+        const { data: newCustomer, error: customerError } = await supabase
+          .from("customers")
+          .insert({ email, name, phone, address })
+          .select("id")
+          .single();
+
+        if (customerError) {
+          console.error("Error creating customer:", customerError);
+          return NextResponse.json(
+            { error: "Failed to create customer" },
+            { status: 500 },
+          );
+        }
+        customerId = newCustomer.id;
       }
-      customerId = newCustomer.id;
     }
+    // If no email is provided, customerId remains null (guest checkout)
 
     // Create order
+    console.log("Creating order with:", {
+      customer_id: customerId,
+      customer_name: name,
+      customer_phone: phone,
+      customer_address: address,
+      status: "pending",
+      subtotal,
+      discount_amount: discountAmount,
+      total: finalTotal,
+      notes,
+      delivery_address: `${address}, ${city}`,
+    });
+
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
         customer_id: customerId,
+        customer_name: name,
+        customer_phone: phone,
+        customer_address: address,
         status: "pending",
         subtotal,
         discount_amount: discountAmount,
@@ -88,10 +110,12 @@ export async function POST(request: Request) {
     if (orderError) {
       console.error("Error creating order:", orderError);
       return NextResponse.json(
-        { error: "Failed to create order" },
+        { error: "Failed to create order: " + orderError.message },
         { status: 500 },
       );
     }
+
+    console.log("Order created successfully:", order.id);
 
     // Create order items
     const orderItems = cart.map(
