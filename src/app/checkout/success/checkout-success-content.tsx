@@ -23,7 +23,6 @@ import {
   ArrowRight,
   Loader2,
 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
 import { formatPrice } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
@@ -70,33 +69,14 @@ export default function CheckoutSuccessContent() {
 
     const fetchOrder = async () => {
       try {
-        const { data, error } = await supabase
-          .from("orders")
-          .select(
-            `
-            id,
-            status,
-            subtotal,
-            discount_amount,
-            total,
-            delivery_address,
-            notes,
-            created_at,
-            customer:customers(name, phone, email),
-            order_items(
-              id,
-              quantity,
-              unit_price,
-              total_price,
-              menu_items(name)
-            )
-          `,
-          )
-          .eq("id", orderId)
-          .single();
+        const response = await fetch(`/api/orders/${orderId}`);
+        const result = await response.json();
 
-        if (error) throw error;
-        setOrder(data as unknown as Order);
+        if (!response.ok) {
+          throw new Error(result.error || "Failed to fetch order");
+        }
+
+        setOrder(result.data);
       } catch (err) {
         console.error("Error fetching order:", err);
         setError("Failed to load order details");
@@ -314,14 +294,15 @@ export default function CheckoutSuccessContent() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                
-
                 {/* Pay on Code */}
                 <a
                   href={`tel:*182*8*1*011896*${Math.round(order.total)}#`}
                   className="block"
                 >
-                  <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+                  <Button
+                    variant="outline"
+                    className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                  >
                     <Phone className="h-4 w-4 mr-2" />
                     Pay on Code
                   </Button>

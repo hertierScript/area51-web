@@ -11,9 +11,9 @@ import {
   User,
   LogOut,
   Settings,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "./theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -78,7 +78,7 @@ export function Navbar({
     { href: "/", label: "Home" },
     { href: "/menu", label: "Menu" },
     { href: "/offers", label: "Offers" },
-    { href: "/orders", label: "My Orders" },
+    // { href: "/orders", label: "My Orders" },
   ];
 
   // Check authentication status on mount
@@ -177,7 +177,6 @@ export function Navbar({
             </Link>
           </div>
           <div className="flex items-center space-x-3">
-            <ThemeToggle />
             <Button variant="ghost" size="icon" className="animate-pulse">
               <ShoppingCart className="h-5 w-5" />
             </Button>
@@ -227,7 +226,17 @@ export function Navbar({
 
         {/* Right side actions */}
         <div className="flex items-center space-x-3">
-          <ThemeToggle />
+          {/* Call Us Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-primary hover:bg-primary/10 hover:text-primary"
+            asChild
+          >
+            <a href="tel:+250796711896">
+              <Phone className="h-5 w-5" />
+            </a>
+          </Button>
 
           <Button
             variant="ghost"
@@ -282,20 +291,26 @@ export function Navbar({
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                {/* <DropdownMenuItem asChild>
                   <Link href="/orders" className="flex items-center cursor-pointer">
                     <ShoppingCart className="mr-2 h-4 w-4" />
                     My Orders
                   </Link>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" className="flex items-center cursor-pointer">
+                  <Link
+                    href="/profile"
+                    className="flex items-center cursor-pointer"
+                  >
                     <User className="mr-2 h-4 w-4" />
                     Profile
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/settings" className="flex items-center cursor-pointer">
+                  <Link
+                    href="/settings"
+                    className="flex items-center cursor-pointer"
+                  >
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
                   </Link>
@@ -310,16 +325,7 @@ export function Navbar({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="border-primary/40 text-primary hover:bg-primary/10 hover:text-primary transition-colors"
-              >
-                Sign In
-              </Button>
-            </Link>
-          )}
+          ) : null}
 
           {/* Mobile Menu Trigger */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -420,20 +426,7 @@ export function Navbar({
                       <LogOut className="mr-2 h-4 w-4" />
                       Log out
                     </Button>
-                  ) : (
-                    <Link
-                      href="/login"
-                      onClick={handleLinkClick}
-                      className="block"
-                    >
-                      <Button
-                        variant="default"
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-base py-6"
-                      >
-                        Sign In / Register
-                      </Button>
-                    </Link>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </SheetContent>

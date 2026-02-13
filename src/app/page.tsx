@@ -38,6 +38,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
+  Eye,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
@@ -291,13 +292,22 @@ export default function Home() {
                           {item.description}
                         </CardDescription>
                       </CardHeader>
-                      <CardFooter className="pt-0 mt-auto">
+                      <CardFooter className="pt-0 mt-auto grid grid-cols-2 gap-2">
+                        <Link href={`/details?id=${item.id}`}>
+                          <Button
+                            variant="outline"
+                            className="w-full border-primary/20 hover:bg-primary/10 gap-2 text-sm"
+                          >
+                            <Eye className="h-4 w-4" />
+                            Details
+                          </Button>
+                        </Link>
                         <Button
                           onClick={() => handleAddToCart(item)}
-                          className="w-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all gap-2 text-sm"
+                          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 gap-2 text-sm"
                         >
                           <AddIcon className="h-4 w-4" />
-                          Add to Cart
+                          Add
                         </Button>
                       </CardFooter>
                     </Card>

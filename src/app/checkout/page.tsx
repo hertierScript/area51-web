@@ -75,35 +75,10 @@ export default function CheckoutPage() {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [activePromotion, setActivePromotion] = useState<Promotion | null>(
     null,
   );
-
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        if (!session) {
-          toast.error("Please sign in to checkout");
-          router.push("/login");
-        }
-        setIsAuthenticated(!!session);
-      } catch (error) {
-        console.error("Auth check error:", error);
-        setIsAuthenticated(true);
-      } finally {
-        setIsAuthLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [router]);
 
   // Fetch promotions from database
   useEffect(() => {
@@ -134,21 +109,6 @@ export default function CheckoutPage() {
   // Computed values - no delivery fee
   const subtotal = totalPrice;
   const finalTotal = subtotal - discountAmount;
-
-  // Show auth loading state
-  if (isAuthLoading) {
-    return (
-      <div className="min-h-screen bg-background text-foreground">
-        <Navbar cartCount={totalItems} />
-        <div className="flex items-center justify-center py-20">
-          <div className="text-center">
-            <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-muted-foreground">Checking authentication...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Show empty cart state
   if (cart.length === 0) {
@@ -245,7 +205,6 @@ export default function CheckoutPage() {
 
     if (
       !formData.name ||
-      !formData.email ||
       !formData.phone ||
       !formData.address ||
       !formData.city
@@ -256,88 +215,48 @@ export default function CheckoutPage() {
     }
 
     try {
-      // Get current user session
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      console.log("Submitting order...");
 
-      // Get or create customer
-      let customerId: string;
-      const { data: existingCustomer } = await supabase
-        .from("customers")
-        .select("id")
-        .eq("email", formData.email)
-        .single();
+      // Use server-side API route with service role
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email || "",
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          notes: formData.notes,
+          cart,
+          subtotal,
+          discountAmount,
+          finalTotal,
+        }),
+      });
 
-      if (existingCustomer) {
-        customerId = existingCustomer.id;
-        // Update customer info
-        await supabase
-          .from("customers")
-          .update({
-            name: formData.name,
-            phone: formData.phone,
-            address: formData.address,
-          })
-          .eq("id", customerId);
-      } else {
-        // Create new customer
-        const { data: newCustomer, error: customerError } = await supabase
-          .from("customers")
-          .insert({
-            email: formData.email,
-            name: formData.name,
-            phone: formData.phone,
-            address: formData.address,
-          })
-          .select("id")
-          .single();
+      const result = await response.json();
 
-        if (customerError) throw new Error("Failed to create customer");
-        customerId = newCustomer.id;
+      if (!response.ok) {
+        console.error("Checkout error:", result.error);
+        throw new Error(result.error || "Failed to place order");
       }
 
-      // Create order
-      const { data: order, error: orderError } = await supabase
-        .from("orders")
-        .insert({
-          customer_id: customerId,
-          status: "pending",
-          subtotal: subtotal,
-          discount_amount: discountAmount,
-          total: finalTotal,
-          notes: formData.notes,
-          delivery_address: `${formData.address}, ${formData.city}`,
-        })
-        .select("id")
-        .single();
-
-      if (orderError) throw new Error("Failed to create order");
-
-      // Create order items
-      const orderItems = cart.map((item) => ({
-        order_id: order.id,
-        menu_item_id: item.id,
-        quantity: item.quantity,
-        unit_price: item.price,
-        total_price: item.price * item.quantity,
-      }));
-
-      const { error: orderItemsError } = await supabase
-        .from("order_items")
-        .insert(orderItems);
-
-      if (orderItemsError) throw new Error("Failed to create order items");
+      console.log("Order created successfully:", result.orderId);
 
       // Clear cart and show success
       clearCart();
       toast.success("Order placed successfully! Your food is on the way.");
-      
+
       // Redirect to success page with order ID
-      router.push(`/checkout/success?order_id=${order.id}`);
+      router.push(`/checkout/success?order_id=${result.orderId}`);
     } catch (error) {
       console.error("Checkout error:", error);
-      toast.error("Failed to place order. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to place order. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -416,6 +335,8 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
+                  {/* Email field hidden - keeping for potential future use */}
+                  {/*
                   <div className="space-y-2">
                     <Label htmlFor="email" className="flex items-center gap-2">
                       <Mail className="h-4 w-4" />
@@ -431,6 +352,7 @@ export default function CheckoutPage() {
                       required
                     />
                   </div>
+                  */}
 
                   <div className="space-y-2">
                     <Label
@@ -444,15 +366,17 @@ export default function CheckoutPage() {
                       id="address"
                       value={formData.address}
                       onChange={(value) =>
-                        setFormData({ ...formData, address: value })
+                        setFormData((prev) => ({ ...prev, address: value }))
                       }
-                      onSelect={(address) => {
-                        setFormData({ ...formData, address });
-                        const parts = address.split(",");
-                        if (parts.length > 1) {
-                          const cityPart = parts[parts.length - 2].trim();
-                          setFormData((prev) => ({ ...prev, city: cityPart }));
-                        }
+                      onSelect={(address, placeId) => {
+                        setFormData((prev) => {
+                          const parts = address.split(",");
+                          let city = prev.city;
+                          if (parts.length > 1) {
+                            city = parts[parts.length - 2].trim();
+                          }
+                          return { ...prev, address, city };
+                        });
                       }}
                       placeholder="Start typing your address..."
                       className="h-10"

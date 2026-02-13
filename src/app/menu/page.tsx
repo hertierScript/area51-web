@@ -34,6 +34,7 @@ import {
   Plus as AddIcon,
   Loader2,
   Search,
+  Eye,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
@@ -186,38 +187,49 @@ export default function MenuPage() {
                       key={item.id}
                       className="overflow-hidden border-border bg-card/50 hover:border-primary/50 transition-all duration-300 group"
                     >
-                      <div className="relative h-48 w-full overflow-hidden">
-                        {item.image && (
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        )}
-                        <div className="absolute top-2 right-2">
-                          <Badge className="bg-black/70 text-primary border-primary">
-                            {item.category}
-                          </Badge>
+                      <Link href={`/details?id=${item.id}`}>
+                        <div className="relative h-48 w-full overflow-hidden">
+                          {item.image && (
+                            <Image
+                              src={item.image}
+                              alt={item.name}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                          )}
+                          <div className="absolute top-2 right-2">
+                            <Badge className="bg-black/70 text-primary border-primary">
+                              {item.category}
+                            </Badge>
+                          </div>
                         </div>
-                      </div>
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
-                            {item.name}
-                          </CardTitle>
-                          <span className="text-primary font-bold">
-                            {formatPrice(item.price)}
-                          </span>
-                        </div>
-                        <CardDescription className="line-clamp-2">
-                          {item.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardFooter>
+                        <CardHeader>
+                          <div className="flex justify-between items-start">
+                            <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                              {item.name}
+                            </CardTitle>
+                            <span className="text-primary font-bold">
+                              {formatPrice(item.price)}
+                            </span>
+                          </div>
+                          <CardDescription className="line-clamp-2">
+                            {item.description}
+                          </CardDescription>
+                        </CardHeader>
+                      </Link>
+                      <CardFooter className="grid grid-cols-2 gap-2">
+                        <Link href={`/details?id=${item.id}`}>
+                          <Button
+                            variant="outline"
+                            className="w-full border-primary/20 hover:bg-primary/10 gap-2"
+                          >
+                            <Eye className="h-4 w-4" />
+                            View Details
+                          </Button>
+                        </Link>
                         <Button
                           onClick={() => handleAddToCart(item)}
-                          className="w-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all gap-2"
+                          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 gap-2"
                         >
                           <AddIcon className="h-4 w-4" />
                           Add to Cart
@@ -304,14 +316,28 @@ export default function MenuPage() {
                         <Plus className="h-3 w-3" />
                       </Button>
                     </div>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="text-muted-foreground hover:text-destructive"
-                      onClick={() => removeFromCart(item.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Link
+                        href={`/details?id=${item.id}`}
+                        onClick={() => setIsCartOpen(false)}
+                      >
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-muted-foreground hover:text-primary"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="text-muted-foreground hover:text-destructive"
+                        onClick={() => removeFromCart(item.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
