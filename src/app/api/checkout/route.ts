@@ -109,6 +109,18 @@ export async function POST(request: Request) {
 
     if (orderError) {
       console.error("Error creating order:", orderError);
+      console.error("Order data being inserted:", {
+        customer_id: customerId,
+        customer_name: name,
+        customer_phone: phone,
+        customer_address: address,
+        status: "pending",
+        subtotal,
+        discount_amount: discountAmount,
+        total: finalTotal,
+        notes,
+        delivery_address: `${address}, ${city}`,
+      });
       return NextResponse.json(
         { error: "Failed to create order: " + orderError.message },
         { status: 500 },
