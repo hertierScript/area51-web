@@ -311,7 +311,7 @@ export default function CheckoutSuccessContent() {
               <CardContent className="space-y-4">
                 {/* Pay on Code */}
                 <a
-                  href={`tel:*182*8*1*011896*${Math.round(order.total)}#`}
+                  href={`tel:*182*8*1*011896*${Math.round(order.total)}%23`}
                   className="block"
                 >
                   <Button
