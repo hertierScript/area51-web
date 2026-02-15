@@ -314,10 +314,7 @@ export default function CheckoutSuccessContent() {
                   href={`tel:*182*8*1*011896*${Math.round(order.total)}%23`}
                   className="block"
                 >
-                  <Button
-                    variant="outline"
-                    className="w-full border-green-600 text-green-600 hover:bg-green-50"
-                  >
+                  <Button className="w-full bg-green-600 text-white hover:bg-green-700">
                     <Phone className="h-4 w-4 mr-2" />
                     Pay on Code
                   </Button>
@@ -326,7 +323,10 @@ export default function CheckoutSuccessContent() {
                 <Separator className="my-4" />
 
                 <Link href="/menu" className="block">
-                  <Button className="w-full bg-primary text-primary-foreground">
+                  <Button
+                    variant="outline"
+                    className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                  >
                     <ShoppingBag className="h-4 w-4 mr-2" />
                     Continue Shopping
                   </Button>

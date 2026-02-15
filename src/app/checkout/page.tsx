@@ -510,12 +510,25 @@ export default function CheckoutPage() {
                   {cart.map((item) => (
                     <div key={item.id} className="flex gap-3 items-start">
                       <div className="relative h-16 w-16 rounded-md overflow-hidden border border-border shrink-0">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          className="object-cover"
-                        />
+                        {item.image ? (
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            unoptimized
+                            className="object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = "none";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-muted flex items-center justify-center">
+                            <span className="text-muted-foreground text-xs">
+                              No image
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-sm truncate">
@@ -672,4 +685,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
