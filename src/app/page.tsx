@@ -93,7 +93,7 @@ const featuredOffers = [
 const reviews = [
   {
     id: 1,
-    name: "Sarah Johnson",
+    name: "Tuyishime Aime",
     rating: 5,
     comment:
       "The Alien Burger is out of this world! Best burger I've ever had.",
@@ -101,7 +101,7 @@ const reviews = [
   },
   {
     id: 2,
-    name: "Mike Chen",
+    name: "Shema Fabrice",
     rating: 5,
     comment:
       "Fast delivery and the food was still hot. The Galactic Pizza is amazing!",
@@ -109,14 +109,14 @@ const reviews = [
   },
   {
     id: 3,
-    name: "Emily Davis",
+    name: "Keza Happy",
     rating: 4,
     comment: "Great food and unique flavors. The Meteor Shake is a must-try!",
     date: "3 days ago",
   },
   {
     id: 4,
-    name: "James Wilson",
+    name: "Ishimwe Belyse",
     rating: 5,
     comment:
       "Excellent service and delicious food. Will definitely order again!",
@@ -124,14 +124,14 @@ const reviews = [
   },
   {
     id: 5,
-    name: "Lisa Anderson",
+    name: "Irumva Prince",
     rating: 5,
     comment: "The Nebula Wings are perfectly spiced. Love this place!",
     date: "1 day ago",
   },
   {
     id: 6,
-    name: "David Brown",
+    name: "Kagabo David",
     rating: 4,
     comment:
       "Good portions and great taste. The Cosmic Salad is fresh and tasty.",
@@ -265,13 +265,22 @@ export default function Home() {
                   >
                     <Card className="overflow-hidden border-border bg-card/50 hover:border-primary/50 transition-all duration-300 group h-full flex flex-col">
                       <div className="relative h-40 w-full overflow-hidden shrink-0">
-                        {item.image && (
+                        {item.image ? (
                           <Image
                             src={item.image}
                             alt={item.name}
                             fill
+                            unoptimized
                             className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                            }}
                           />
+                        ) : (
+                          <div className="w-full h-full bg-muted flex items-center justify-center">
+                            <span className="text-muted-foreground text-sm">No image</span>
+                          </div>
                         )}
                         <div className="absolute top-2 right-2">
                           <Badge className="bg-black/70 text-primary border-primary text-xs">
@@ -551,12 +560,23 @@ export default function Home() {
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-4 items-center">
                     <div className="relative h-16 w-16 rounded-md overflow-hidden border border-border shrink-0">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
+                      {item.image ? (
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          unoptimized
+                          className="object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <span className="text-muted-foreground text-xs">No image</span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-sm truncate">
