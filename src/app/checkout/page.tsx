@@ -312,7 +312,7 @@ export default function CheckoutPage() {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        placeholder="John Doe"
+                        placeholder="Ishimwe Bosco"
                         required
                       />
                     </div>
@@ -330,7 +330,7 @@ export default function CheckoutPage() {
                         type="tel"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        placeholder="+1 234 567 8900"
+                        placeholder="+250 788123456"
                         required
                       />
                     </div>
@@ -379,7 +379,7 @@ export default function CheckoutPage() {
                           return { ...prev, address, city };
                         });
                       }}
-                      placeholder="Start typing your address..."
+                      placeholder="Roundabout, Remera"
                       className="h-10"
                     />
                   </div>
@@ -394,7 +394,7 @@ export default function CheckoutPage() {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      placeholder="New York"
+                      placeholder="Kigali city"
                       required
                     />
                   </div>
