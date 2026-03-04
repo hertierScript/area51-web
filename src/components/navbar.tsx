@@ -72,6 +72,7 @@ export function Navbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userSession, setUserSession] = useState<UserSession | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [showWorkingHours, setShowWorkingHours] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
@@ -160,6 +161,34 @@ export function Navbar({
   if (isAuthLoading) {
     return (
       <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        {showWorkingHours && (
+          <div className="bg-primary/10 border-b border-primary/20">
+            <div className="container mx-auto px-2 sm:px-4 py-1.5 overflow-hidden">
+              <div className="flex items-center justify-between gap-1 sm:gap-2 text-xs sm:text-sm">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 flex-1">
+                  <span className="text-muted-foreground whitespace-nowrap">
+                    Working Hours:
+                  </span>
+                  <span className="font-medium text-primary whitespace-nowrap">
+                    Mon - Sat: 10:00 AM - 10:00 PM
+                  </span>
+                  <span className="hidden sm:inline text-muted-foreground">|</span>
+                  <span className="text-muted-foreground whitespace-nowrap">
+                    Sun: Closed
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowWorkingHours(false)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center space-x-2">
@@ -188,6 +217,34 @@ export function Navbar({
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {showWorkingHours && (
+        <div className="bg-primary/10 border-b border-primary/20">
+          <div className="container mx-auto px-2 sm:px-4 py-1.5 overflow-hidden">
+            <div className="flex items-center justify-between gap-1 sm:gap-2 text-xs sm:text-sm">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 flex-1">
+                <span className="text-muted-foreground whitespace-nowrap">
+                  Working Hours:
+                </span>
+                <span className="font-medium text-primary whitespace-nowrap">
+                  Mon - Sat: 10:00 AM - 10:00 PM
+                </span>
+                <span className="hidden sm:inline text-muted-foreground">|</span>
+                <span className="text-muted-foreground whitespace-nowrap">
+                  Sun: Closed
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowWorkingHours(false)}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center gap-4">
